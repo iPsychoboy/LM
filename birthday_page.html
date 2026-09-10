@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>كل عام وانتِ بخير لمو</title>
+    <style>
+        @font-face { font-family: 'f2'; src: url('font2.ttf'); }
+        @font-face { font-family: 'f3'; src: url('font3.otf'); }
+
+        /* ==========================================================================
+           لوحة التحكم بالأبعاد — عدّل القيم هنا فقط، ولا تحتاج تلمس باقي الكود
+           كل متغير موضّح جنبه أي صورة أو نص يتحكم فيه
+           صيغة clamp(الحد_الأدنى, الحجم_المرن, الحد_الأقصى) تخلي المقاس يتكيف
+           تلقائيًا مع حجم الشاشة (جوال صغير / جوال كبير / تابلت / كمبيوتر)
+           ========================================================================== */
+        :root {
+            --burgundy: #3d0007;
+            --cream: #f5f1e6;
+
+            /* عرض "المسرح" (إطار الموقع الشبيه بشاشة الجوال) على الشاشات الكبيرة
+               زد الرقم لو تبي الإطار أعرض على الكمبيوتر، أو صغّره لو تبي أضيق */
+            --stage-max-width: 480px;
+            --page-outer-bg: #141414; /* لون خلفية الصفحة خارج الإطار (يظهر بالكمبيوتر فقط) */
+
+            /* -- 1) صورة الزخرفة العلوية (lace_bg.png) -- */
+            --lace-width: 94%;
+            --lace-height: clamp(230px, 46vh, 380px);
+            --lace-top: 0px;
+            --lace-right: -5px;
+
+            /* -- 2) صورة الفتاة المتحركة (lady_animated.gif) -- */
+            --lady-width: clamp(190px, 62vw, 315px);
+            --lady-top: 15px;
+            --lady-right: 0px;
+
+            /* -- 3) نص التهنئة فوق صورة الفتاة (gif-text) -- */
+            --gif-text-font-size: clamp(0.9rem, 3.4vw, 1.2rem);
+            --gif-text-top: clamp(160px, 32vh, 210px);
+            --gif-text-right: 15px;
+            --gif-text-width: 55%; /* عرض مربع النص حتى لا يلتصق بالحواف بالشاشات الصغيرة */
+
+            /* -- 4) صورة الفتاة الجانبية بالورود (lady_roses.png) -- */
+            --side-lady-width: clamp(150px, 46vw, 220px);
+            --side-lady-bottom: 170px;
+            --side-lady-right: 0px;
+
+            /* -- 5) صندوق الظرف + النص تحته (env-box / envelope_icon.png) -- */
+            --envelope-width: clamp(95px, 26vw, 130px);
+            --env-box-left: 15px;
+            --env-box-top: 35vh;
+            --env-text-font-size: clamp(0.75rem, 3vw, 0.9rem);
+
+            /* -- 6) الطابع البريدي (stamp.png) -- */
+            --stamp-width: clamp(45px, 13vw, 60px);
+            --stamp-top: 285px;
+            --stamp-right: 17px;
+
+            /* -- 7) منطقة القصيدة أسفل يسار الشاشة -- */
+            --poetry-width: clamp(170px, 52vw, 220px);
+            --poetry-bottom: 6vh;
+            --poetry-font-size: clamp(0.8rem, 3vw, 1.05rem);
+            --poetry-line-height: 2.1;
+
+            /* -- 8) زر زهرة الليلي (white_lily.png) -- */
+            --lily-width: clamp(48px, 15vw, 60px);
+            --lily-caption-font-size: clamp(0.7rem, 2.8vw, 0.8rem);
+
+            /* -- 9) نافذة السؤال الأولى (custom-alert) -- */
+            --alert-width: clamp(220px, 70vw, 280px);
+            --alert-title-font-size: clamp(1rem, 4vw, 1.1rem);
+
+            /* -- 10) نافذة الكيكة (cake-modal) -- */
+            --cake-modal-width: 92%;
+            --cake-modal-height: 82vh;
+            --cake-img-width: clamp(110px, 32vw, 150px);
+            --decor-img-width: clamp(65px, 20vw, 90px);
+            --blue-rose-width: clamp(110px, 32vw, 150px);
+            --cake-flex-gap: clamp(8px, 3vw, 20px);
+            --blow-txt-font-size: clamp(1.2rem, 5vw, 1.7rem);
+            --back-nav-font-size: clamp(0.85rem, 3.2vw, 1rem);
+
+            /* -- 11) الظرف/الكرت داخل رسالة "من اخوك" (postcard) -- */
+            --postcard-width: 95%;
+            --postcard-height: 80vh;
+            --letter-title-font-size: clamp(0.95rem, 4vw, 1.1rem);
+            --letter-title-top: 50%;
+            --letter-title-right: 20%;
+            --letter-body-font-size: clamp(0.78rem, 3vw, 0.9rem);
+            --letter-body-line-height: 1.5;
+            --letter-body-top: 58%;
+            --letter-signature-font-size: clamp(0.8rem, 3vw, 0.95rem);
+
+            /* -- 12) إعدادات سرعة الأنيميشن -- */
+            --letter-typing-speed-ms: 45; /* كل ما صغرت الرقم، كتابة الرسالة تصير أسرع */
+        }
+
+        * { box-sizing: border-box; }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: var(--page-outer-bg);
+            overflow: hidden;
+        }
+
+        /* ==========================================================================
+           "المسرح" — إطار ثابت النسبة يحافظ على مكان كل الصور صحيح في جميع
+           المتصفحات والأجهزة (جوال، تابلت، كمبيوتر) لأن كل الصور توضع بالنسبة له
+           بدل الشاشة كاملة
+           ========================================================================== */
+        .stage {
+            position: relative;
+            width: 100%;
+            max-width: var(--stage-max-width);
+            height: 100vh;
+            height: 100dvh; /* يحل مشكلة شريط العنوان بمتصفحات الجوال */
+            margin: 0 auto;
+            background-color: var(--burgundy);
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5); /* إطار جمالي بسيط بالكمبيوتر، احذفه إذا ما تبيه */
+        }
+
+        /* تنسيق نوافذ السؤال */
+        .custom-alert {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: var(--alert-width); background: rgba(245, 241, 230, 0.98);
+            border-radius: 12px; text-align: center; z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: none;
+            padding-top: 20px; overflow: hidden; font-family: 'f2';
+        }
+        .alert-title { color: var(--burgundy); font-weight: bold; margin-bottom: 15px; font-size: var(--alert-title-font-size); }
+        .alert-btns { display: flex; border-top: 1px solid #ccc; }
+        .alert-btn {
+            flex: 1; padding: 12px; cursor: pointer;
+            color: #007AFF; font-weight: bold; border-right: 1px solid #ccc;
+        }
+        .alert-btn:last-child { border-right: none; }
+
+        /* لوحة الصور المتساقطة (تُملأ عبر جافاسكربت) — لا تلمس هذا الجزء،
+           تحكم بالشكل والسرعة من قسم الجافاسكربت أسفل الصفحة */
+        .falling-canvas {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* التنسيقات الأساسية */
+        .lace-area { position: absolute; right: var(--lace-right); top: var(--lace-top); width: var(--lace-width); height: var(--lace-height); background: url('lace_bg.png') no-repeat right top; background-size: contain; z-index: 1; }
+        .lady-gif { position: absolute; right: var(--lady-right); top: var(--lady-top); width: var(--lady-width); height: auto; z-index: 2; }
+        .gif-text { position: absolute; right: var(--gif-text-right); top: var(--gif-text-top); width: var(--gif-text-width); font-family: 'f2'; color: var(--burgundy); font-weight: bold; font-size: var(--gif-text-font-size); z-index: 3; }
+        .side-lady { position: absolute; right: var(--side-lady-right); bottom: var(--side-lady-bottom); width: var(--side-lady-width); height: auto; z-index: 2; }
+        .env-box { position: absolute; left: var(--env-box-left); top: var(--env-box-top); text-align: center; z-index: 10; cursor: pointer; }
+        .envelope-img { width: var(--envelope-width); }
+
+        .poetry-area { position: absolute; left: 0px; bottom: var(--poetry-bottom); z-index: 10; text-align: center; width: var(--poetry-width); }
+        .poetry-text { font-family: 'f3'; color: var(--cream); font-size: var(--poetry-font-size); line-height: var(--poetry-line-height); margin-bottom: 0px; }
+        .lily-btn { width: var(--lily-width); height: auto; cursor: pointer; }
+        .stamp-img { position: absolute; top: var(--stamp-top); right: var(--stamp-right); width: var(--stamp-width); height: auto; z-index: 10; }
+
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; background: rgba(0,0,0,0.85); z-index: 1000; }
+        .cake-modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: var(--cake-modal-width); height: var(--cake-modal-height); background: var(--cream); border: 15px solid transparent; border-image: url('lace_bg.png') 30 round; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        .back-nav { position: absolute; top: 15px; right: 20px; color: var(--burgundy); font-family: 'f2'; font-weight: bold; cursor: pointer; font-size: var(--back-nav-font-size); z-index: 5; }
+        .cake-flex { display: flex; align-items: center; justify-content: center; gap: var(--cake-flex-gap); width: 100%; z-index: 1; }
+        .cake-img { width: var(--cake-img-width); height: auto; }
+        .decor-img { width: var(--decor-img-width); height: auto; }
+        .blue-rose { width: var(--blue-rose-width); height: auto; }
+        .blow-txt { color: var(--burgundy); font-family: 'f2'; font-size: var(--blow-txt-font-size); margin-top: 20px; z-index: 1; text-align: center; padding: 0 10px; }
+
+        .letter-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; background: rgba(0,0,0,0.9); z-index: 2000; justify-content: center; align-items: center; }
+        .postcard { width: var(--postcard-width); height: var(--postcard-height); background: url('postcard_bg.png') no-repeat center; background-size: contain; position: relative; }
+        .letter-back { position: absolute; top: 100px; right: 20px; color: var(--burgundy); font-family: 'f2'; font-weight: bold; cursor: pointer; z-index: 100; font-size: var(--back-nav-font-size); }
+        .blur { filter: blur(10px); transition: 0.3s; }
+        .letter-title { position: absolute; top: var(--letter-title-top); right: var(--letter-title-right); font-family: 'f3'; font-size: var(--letter-title-font-size); color: var(--burgundy); font-weight: bold; }
+        .letter-body { position: absolute; top: var(--letter-body-top); left: 12%; right: 12%; text-align: center; font-family: 'f3'; font-size: var(--letter-body-font-size); line-height: var(--letter-body-line-height); color: var(--burgundy); max-height: 40%; overflow-y: auto; }
+        .letter-signature { position: absolute; bottom: 6%; left: 12%; right: 12%; text-align: center; font-family: 'f2'; font-size: var(--letter-signature-font-size); color: var(--burgundy); font-weight: bold; }
+
+        /* مؤشر الكتابة المتحركة أثناء ظهور الرسالة */
+        .type-cursor { display: inline-block; margin-right: 2px; animation: blink 0.9s steps(1) infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* احترام إعداد "تقليل الحركة" لمن يفعّله بجهازه */
+        @media (prefers-reduced-motion: reduce) {
+            .type-cursor { animation: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stage" id="stage">
+
+        <div id="alert1" class="custom-alert" style="display: block;">
+            <div class="alert-title"> انا افضل اخ ؟</div>
+            <div class="alert-btns">
+                <div class="alert-btn" onclick="handleFirstAlert()">اي</div>
+                <div class="alert-btn" onclick="handleFirstAlert()">اي</div>
+            </div>
+        </div>
+
+        <div id="mainUI" class="blur">
+            <!-- الصور المتساقطة الأولى: تعمل بالصفحة الرئيسية فقط -->
+            <canvas id="fallingCanvas1" class="falling-canvas"></canvas>
+
+            <div class="lace-area"></div>
+            <img src="lady_animated.gif" class="lady-gif">
+            <div class="gif-text">زدتي عاماً ، وأنتِ في كُلِ يومٍ تزدادينَ جمالا</div>
+            <img src="lady_roses.png" class="side-lady">
+
+            <div class="env-box" onclick="showLetter()">
+                <img src="envelope_icon.png" class="envelope-img">
+                <div style="color:var(--cream); font-family:'f2'; font-size:var(--env-text-font-size); margin-top:5px;">كل عام وأنتِ بخير</div>
+            </div>
+
+            <div class="poetry-area">
+                <div class="poetry-text">
+                   وَهَبَ الإلهَ بِكَ الجمالا تَجَّمُلا <br>
+                   حتى كأنكَ للجَمَالِ جَمالَ<br>
+                   ولو كُنتِ في أيامِ يوسُفٍ لم تَكُن<br>
+                   بِجَمَالِ يوسفَ تُضّرَبُ الأمثالَ
+                </div>
+                <img src="white_lily.png" class="lily-btn" onclick="showCake()">
+                <span style="color:var(--cream); font-family:'f2'; display:block; font-size:var(--lily-caption-font-size); margin-top:5px;">اضغطي القطوه اول !</span>
+            </div>
+
+            <img src="stamp.png" class="stamp-img">
+        </div>
+
+        <div class="overlay" id="cakeOverlay">
+            <div class="cake-modal">
+                <!-- الصور المتساقطة الثانية: تبدأ بعد نفخ الشموع -->
+                <canvas id="fallingCanvas2" class="falling-canvas"></canvas>
+
+                <div class="back-nav" onclick="hideCake()">عودة للظرف</div>
+                <div class="cake-flex">
+                    <img src="extra_photo.png" class="decor-img">
+                    <img src="cake_candles_on.gif" id="cakeGif" class="cake-img">
+                    <img src="blue_bouquet.png" class="blue-rose">
+                </div>
+                <div class="blow-txt" id="status">انفخي الشموع !</div>
+            </div>
+        </div>
+
+        <div class="letter-overlay" id="letterUI">
+            <div class="postcard">
+                <img src="stamp.png" class="stamp-img">
+                <div class="letter-back" onclick="hideLetter()">عودة</div>
+                <div class="letter-title">الى لمار</div>
+                <div class="letter-body" id="letterBody"></div>
+                <div class="letter-signature">من اخوك</div>
+            </div>
+        </div>
+
+        <audio id="bgMusic" src="background.mp3" loop></audio>
+        <audio id="clap" src="claps.mp3"></audio>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        /* ==========================================================================
+           ✏️ نص الرسالة داخل الظرف — عدّل النص هنا وسيظهر تلقائيًا بشكل
+           "كتابة متحركة" وكأنها تُكتب الآن. اترك سطر فارغ للفصل بين الفقرات.
+           ========================================================================== */
+        const LETTER_TEXT =
+`السلام عليكم ورحمة الله وبركاته
+
+اليوم يوم ميلاد اجمل اخت بالدنيا ، كل عام وانتي بخير ،هذي هدية بسيطة سويتها لك واتمنى انها تعجبك 🤍🥳`;
+
+        /* ==========================================================================
+           ✏️ إعدادات الصور المتساقطة — غيّر اسم ملف الصورة هنا فقط
+           ضع الصورتين بنفس مجلد الصفحة بنفس الاسم، أو غيّر الاسم هنا ليطابق ملفك
+           ========================================================================== */
+        const FALLING_IMAGE_MAIN = 'falling_flower.png'; // الصورة المتساقطة بالصفحة الرئيسية
+        const FALLING_IMAGE_CAKE = 'falling_heart.png';  // الصورة المتساقطة بعد نفخ الشموع
+
+        const REDUCE_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let candlesBlown = false;
+        let typeTimer = null;
+
+        function handleFirstAlert() {
+            document.getElementById('alert1').style.display = 'none';
+            document.getElementById('mainUI').classList.remove('blur');
+            const bg = document.getElementById('bgMusic');
+            bg.play().catch(e => console.log("تفاعل مطلوب"));
+        }
+
+        function showCake() {
+            document.getElementById('bgMusic').pause(); // توقف الموسيقى فقط هنا
+            document.getElementById('mainUI').classList.add('blur');
+            document.getElementById('cakeOverlay').style.display = 'block';
+            petalsMain.stop();
+            if (candlesBlown) petalsCake.start(); // إذا كانت الشموع انطفت من قبل، كمّل التساقط
+            startBlow();
+        }
+
+        function hideCake() {
+            document.getElementById('mainUI').classList.remove('blur');
+            document.getElementById('cakeOverlay').style.display = 'none';
+            document.getElementById('bgMusic').play();
+            petalsCake.stop();
+            petalsMain.start();
+        }
+
+        function showLetter() {
+            // الموسيقى تبقى شغالة ولا تتوقف عند فتح الظرف
+            document.getElementById('letterUI').style.display = 'flex';
+            petalsMain.stop();
+            typeLetter();
+        }
+
+        function hideLetter() {
+            document.getElementById('letterUI').style.display = 'none';
+            clearInterval(typeTimer);
+            petalsMain.start();
+        }
+
+        /* ==========================================================================
+           تأثير "كتابة الرسالة الآن" — يكتب نص LETTER_TEXT حرفًا حرفًا
+           ========================================================================== */
+        function typeLetter() {
+            const el = document.getElementById('letterBody');
+            clearInterval(typeTimer);
+            el.innerHTML = '';
+
+            if (REDUCE_MOTION) {
+                // عرض النص مباشرة بدون حركة لمن يفعّل "تقليل الحركة" بجهازه
+                el.innerHTML = LETTER_TEXT.split('\n\n').join('<br><br>');
+                return;
+            }
+
+            const cursor = '<span class="type-cursor">|</span>';
+            const chars = Array.from(LETTER_TEXT); // Array.from تدعم الرموز التعبيرية (الإيموجي) بشكل صحيح
+            let i = 0;
+            let html = '';
+            const speed = Number(getComputedStyle(document.documentElement).getPropertyValue('--letter-typing-speed-ms')) || 45;
+
+            typeTimer = setInterval(() => {
+                if (i >= chars.length) {
+                    clearInterval(typeTimer);
+                    el.innerHTML = html; // إزالة المؤشر عند الانتهاء
+                    return;
+                }
+                const c = chars[i];
+                html += (c === '\n') ? '<br>' : c;
+                el.innerHTML = html + cursor;
+                i++;
+            }, speed);
+        }
+
+        /* ==========================================================================
+           محرك الصور المتساقطة — قابل لإعادة الاستخدام لصورتين مختلفتين
+           تقدر تتحكم بعدد/حجم/سرعة/تمايل الصور من خلال settings بالأسفل
+           ========================================================================== */
+        function createFalling(canvasId, imageSrc, settings) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.src = imageSrc;
+
+            const cfg = Object.assign({
+                count: 16,             // عدد الصور المتساقطة بنفس الوقت
+                minSize: 16, maxSize: 30,      // أصغر/أكبر حجم للصورة (بالبكسل)
+                minSpeed: 0.5, maxSpeed: 1.4,  // سرعة السقوط (بكسل لكل إطار)
+                minSway: 0.3, maxSway: 1.1,    // مدى التمايل يمين/يسار أثناء السقوط
+                minRotSpeed: -1, maxRotSpeed: 1 // سرعة الدوران (درجة لكل إطار)
+            }, settings || {});
+
+            let particles = [];
+            let running = false;
+
+            function rand(a, b) { return a + Math.random() * (b - a); }
+
+            function resizeCanvas() {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+            }
+
+            function spawn(startAtTop) {
+                return {
+                    x: rand(0, canvas.width || 1),
+                    y: startAtTop ? rand(-canvas.height, 0) : -30,
+                    size: rand(cfg.minSize, cfg.maxSize),
+                    speed: rand(cfg.minSpeed, cfg.maxSpeed),
+                    sway: rand(cfg.minSway, cfg.maxSway),
+                    swayOffset: rand(0, Math.PI * 2),
+                    rot: rand(0, 360),
+                    rotSpeed: rand(cfg.minRotSpeed, cfg.maxRotSpeed)
+                };
+            }
+
+            function ensureParticles() {
+                while (particles.length < cfg.count) particles.push(spawn(true));
+            }
+
+            function tick(t) {
+                if (canvas.width > 0 && canvas.height > 0) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    if (running && !REDUCE_MOTION) {
+                        particles.forEach(p => {
+                            p.y += p.speed;
+                            p.x += Math.sin((t / 1000) + p.swayOffset) * p.sway * 0.3;
+                            p.rot += p.rotSpeed;
+                            if (p.y - p.size > canvas.height) {
+                                Object.assign(p, spawn(false));
+                            }
+                        });
+                    }
+                    if (running || !REDUCE_MOTION) {
+                        particles.forEach(p => {
+                            ctx.save();
+                            ctx.translate(p.x, p.y);
+                            ctx.rotate((p.rot * Math.PI) / 180);
+                            if (img.complete && img.naturalWidth > 0) {
+                                ctx.drawImage(img, -p.size / 2, -p.size / 2, p.size, p.size);
+                            }
+                            ctx.restore();
+                        });
+                    }
+                }
+                requestAnimationFrame(tick);
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            ensureParticles();
+            requestAnimationFrame(tick);
+
+            return {
+                start() { running = true; },
+                stop() { running = false; }
+            };
+        }
+
+        const petalsMain = createFalling('fallingCanvas1', FALLING_IMAGE_MAIN, { count: 16 });
+        const petalsCake = createFalling('fallingCanvas2', FALLING_IMAGE_CAKE, { count: 14 });
+
+        // تبدأ الصور بالتساقط بمجرد فتح الموقع، وتتوقف/تكمل حسب الشاشة المفتوحة
+        window.addEventListener('load', () => {
+            petalsMain.start();
+        });
+
+        function startBlow() {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(s => {
+                const ac = new AudioContext(); const an = ac.createAnalyser();
+                ac.createMediaStreamSource(s).connect(an); const d = new Uint8Array(an.frequencyBinCount);
+                function l() {
+                    an.getByteFrequencyData(d);
+                    if (d.reduce((a, b) => a + b) / d.length > 50) {
+                        document.getElementById('cakeGif').src = 'cake_candles_off.gif';
+                        document.getElementById('status').innerText = 'كل عام وأنتِ بخير';
+                        document.getElementById('clap').play();
+                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                        candlesBlown = true;
+                        petalsCake.start();
+                        s.getTracks().forEach(t => t.stop());
+                    } else if (document.getElementById('cakeOverlay').style.display === 'block') requestAnimationFrame(l);
+                }
+                l();
+            }).catch(e => console.log("Audio needed for candles"));
+        }
+    </script>
+</body>
+</html>
