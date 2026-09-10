@@ -8,65 +8,61 @@
         @font-face { font-family: 'f2'; src: url('font2.ttf'); }
         @font-face { font-family: 'f3'; src: url('font3.otf'); }
 
-        /* ==========================================================================
-           لوحة التحكم بالأبعاد — معدّلة حسب طلبك تمامًا
-           ========================================================================== */
         :root {
             --burgundy: #3d0007;
             --cream: #f5f1e6;
 
-            /* عرض "المسرح" (إطار الموقع الشبيه بشاشة الجوال) على الشاشات الكبيرة */
             --stage-max-width: 480px;
             --page-outer-bg: #141414;
 
-            /* -- 1) صورة الزخرفة العلوية (lace_bg.png) -- */
+            /* 1) صورة الزخرفة العلوية */
             --lace-width: 94%;
             --lace-height: clamp(230px, 46vh, 380px);
             --lace-top: 0px;
             --lace-right: -5px;
 
-            /* -- 2) صورة الفتاة العلوية (معدّلة لتغطي المربع الوردي بالكامل) -- */
+            /* 2) صورة الفتاة العلوية */
             --lady-width: clamp(250px, 78vw, 370px);
             --lady-top: 25px;
             --lady-right: 22px;
 
-            /* -- 3) نص التهنئة فوق صورة الفتاة (gif-text) -- */
+            /* 3) نص التهنئة فوق صورة الفتاة */
             --gif-text-font-size: clamp(0.9rem, 3.4vw, 1.2rem);
             --gif-text-top: clamp(160px, 32vh, 210px);
             --gif-text-right: 15px;
             --gif-text-width: 55%;
 
-            /* -- 4) صورة الفتاة الجانبية بالورود (lady_roses.png) -- */
+            /* 4) صورة الفتاة الجانبية بالورود */
             --side-lady-width: clamp(150px, 46vw, 220px);
             --side-lady-bottom: 170px;
             --side-lady-right: 0px;
 
-            /* -- 5) صندوق الظرف (معدّل ليكون بارتفاع المربع الأسود) -- */
+            /* 5) صندوق الظرف */
             --envelope-width: clamp(95px, 26vw, 130px);
             --env-box-left: 15px;
-            --env-box-top: 25vh; /* تم الرفع من 35vh إلى 25vh */
+            --env-box-top: 24vh;
             --env-text-font-size: clamp(0.75rem, 3vw, 0.9rem);
 
-            /* -- 6) الطابع البريدي (stamp.png) -- */
+            /* 6) الطابع البريدي داخل البوست كارد */
             --stamp-width: clamp(45px, 13vw, 60px);
             --stamp-top: 285px;
             --stamp-right: 17px;
 
-            /* -- 7) منطقة القصيدة أسفل يسار الشاشة -- */
+            /* 7) منطقة القصيدة (تم تحريكها لموقع المربع الأخضر) */
             --poetry-width: clamp(170px, 52vw, 220px);
-            --poetry-bottom: 6vh;
-            --poetry-font-size: clamp(0.8rem, 3vw, 1.05rem);
-            --poetry-line-height: 2.1;
+            --poetry-top: 40vh; /* رفعها للمربع الأخضر */
+            --poetry-font-size: clamp(0.78rem, 2.9vw, 0.98rem);
+            --poetry-line-height: 1.8;
 
-            /* -- 8) زر زهرة الليلي (white_lily.png) -- */
+            /* 8) زر زهرة/قطوة الليلي */
             --lily-width: clamp(48px, 15vw, 60px);
             --lily-caption-font-size: clamp(0.7rem, 2.8vw, 0.8rem);
 
-            /* -- 9) نافذة السؤال الأولى (custom-alert) -- */
+            /* 9) نافذة السؤال الأولى */
             --alert-width: clamp(220px, 70vw, 280px);
             --alert-title-font-size: clamp(1rem, 4vw, 1.1rem);
 
-            /* -- 10) نافذة الكيكة (cake-modal) -- */
+            /* 10) نافذة الكيكة */
             --cake-modal-width: 92%;
             --cake-modal-height: 82vh;
             --cake-img-width: clamp(110px, 32vw, 150px);
@@ -76,7 +72,7 @@
             --blow-txt-font-size: clamp(1.2rem, 5vw, 1.7rem);
             --back-nav-font-size: clamp(0.85rem, 3.2vw, 1rem);
 
-            /* -- 11) الظرف/الكرت داخل رسالة "من اخوك" (postcard) -- */
+            /* 11) البوست كارد */
             --postcard-width: 95%;
             --postcard-height: 80vh;
             --letter-title-font-size: clamp(0.95rem, 4vw, 1.1rem);
@@ -87,7 +83,6 @@
             --letter-body-top: 58%;
             --letter-signature-font-size: clamp(0.85rem, 3.2vw, 1rem);
 
-            /* -- 12) إعدادات سرعة الأنيميشن -- */
             --letter-typing-speed-ms: 45;
         }
 
@@ -114,7 +109,20 @@
             direction: rtl;
         }
 
-        /* تنسيق نوافذ السؤال */
+        /* تأثير الاهتزاز للعناصر القابلة للضغط */
+        @keyframes subtleShake {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-4deg) scale(1.03); }
+            40% { transform: rotate(4deg) scale(1.03); }
+            60% { transform: rotate(-2deg) scale(1.01); }
+            80% { transform: rotate(2deg) scale(1.01); }
+        }
+
+        .shake-interactive {
+            animation: subtleShake 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
         .custom-alert {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: var(--alert-width); background: rgba(245, 241, 230, 0.98);
@@ -137,18 +145,21 @@
             z-index: 0;
         }
 
-        /* التنسيقات الأساسية */
         .lace-area { position: absolute; right: var(--lace-right); top: var(--lace-top); width: var(--lace-width); height: var(--lace-height); background: url('lace_bg.png') no-repeat right top; background-size: contain; z-index: 1; }
         .lady-gif { position: absolute; right: var(--lady-right); top: var(--lady-top); width: var(--lady-width); height: auto; z-index: 2; }
         .gif-text { position: absolute; right: var(--gif-text-right); top: var(--gif-text-top); width: var(--gif-text-width); font-family: 'f2'; color: var(--burgundy); font-weight: bold; font-size: var(--gif-text-font-size); z-index: 3; text-align: right; }
         .side-lady { position: absolute; right: var(--side-lady-right); bottom: var(--side-lady-bottom); width: var(--side-lady-width); height: auto; z-index: 2; }
+        
         .env-box { position: absolute; left: var(--env-box-left); top: var(--env-box-top); text-align: center; z-index: 10; cursor: pointer; }
         .envelope-img { width: var(--envelope-width); }
 
-        .poetry-area { position: absolute; left: 0px; bottom: var(--poetry-bottom); z-index: 10; text-align: center; width: var(--poetry-width); }
-        .poetry-text { font-family: 'f3'; color: var(--cream); font-size: var(--poetry-font-size); line-height: var(--poetry-line-height); margin-bottom: 0px; text-align: center; }
+        /* منطقة القصيدة بالمربع الأخضر والمربع الأصفر للقطوة */
+        .poetry-area { position: absolute; left: 10px; top: var(--poetry-top); z-index: 10; text-align: center; width: var(--poetry-width); }
+        .poetry-text { font-family: 'f3'; color: var(--cream); font-size: var(--poetry-font-size); line-height: var(--poetry-line-height); margin-bottom: 12px; text-align: center; }
         .lily-btn { width: var(--lily-width); height: auto; cursor: pointer; }
-        .stamp-img { position: absolute; top: var(--stamp-top); right: var(--stamp-right); width: var(--stamp-width); height: auto; z-index: 10; }
+        
+        /* الطابع للبوست كارد فقط */
+        .postcard .stamp-img { position: absolute; top: var(--stamp-top); right: var(--stamp-right); width: var(--stamp-width); height: auto; z-index: 10; }
 
         .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; background: rgba(0,0,0,0.85); z-index: 1000; }
         .cake-modal { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: var(--cake-modal-width); height: var(--cake-modal-height); background: var(--cream); border: 15px solid transparent; border-image: url('lace_bg.png') 30 round; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
@@ -166,14 +177,13 @@
         .letter-title { position: absolute; top: var(--letter-title-top); right: var(--letter-title-right); font-family: 'f3'; font-size: var(--letter-title-font-size); color: var(--burgundy); font-weight: bold; }
         .letter-body { position: absolute; top: var(--letter-body-top); left: 12%; right: 12%; text-align: center; font-family: 'f3'; font-size: var(--letter-body-font-size); line-height: var(--letter-body-line-height); color: var(--burgundy); max-height: 40%; overflow-y: auto; direction: rtl; }
         
-        /* معدّل: تم رفع كلمة "من اخوك" لتقف فوق الخط الأحمر مباشرة */
         .letter-signature { position: absolute; bottom: 22%; left: 12%; right: 12%; text-align: center; font-family: 'f2'; font-size: var(--letter-signature-font-size); color: var(--burgundy); font-weight: bold; }
 
         .type-cursor { display: inline-block; margin-left: 2px; animation: blink 0.9s steps(1) infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
         @media (prefers-reduced-motion: reduce) {
-            .type-cursor { animation: none; }
+            .type-cursor, .shake-interactive { animation: none; }
         }
     </style>
 </head>
@@ -197,11 +207,13 @@
             <div class="gif-text">زدتي عاماً ، وأنتِ في كُلِ يومٍ تزدادينَ جمالا</div>
             <img src="lady_roses.png" class="side-lady">
 
-            <div class="env-box" onclick="showLetter()">
+            <!-- الظرف يهتز تلقائياً لتنبيه المستحدم -->
+            <div class="env-box shake-interactive" onclick="showLetter()">
                 <img src="envelope_icon.png" class="envelope-img">
                 <div style="color:var(--cream); font-family:'f2'; font-size:var(--env-text-font-size); margin-top:5px;">كل عام وأنتِ بخير</div>
             </div>
 
+            <!-- مكان الأبيات في المربع الأخضر والقطوة في المربع الأصفر -->
             <div class="poetry-area">
                 <div class="poetry-text">
                     وَهَبَ الإلهَ بِكَ الجمالا تَجَّمُلا <br>
@@ -209,11 +221,12 @@
                     ولو كُنتِ في أيامِ يوسُفٍ لم تَكُن <br>
                     بِجَمَالِ يوسفَ تُضّرَبُ الأمثالَ
                 </div>
-                <img src="white_lily.png" class="lily-btn" onclick="showCake()">
+                <!-- صورة القطوة تهتز أيضاً -->
+                <div class="shake-interactive">
+                    <img src="white_lily.png" class="lily-btn" onclick="showCake()">
+                </div>
                 <span style="color:var(--cream); font-family:'f2'; display:block; font-size:var(--lily-caption-font-size); margin-top:5px;">اضغطي القطوه اول !</span>
             </div>
-
-            <img src="stamp.png" class="stamp-img">
         </div>
 
         <div class="overlay" id="cakeOverlay">
@@ -232,6 +245,7 @@
 
         <div class="letter-overlay" id="letterUI">
             <div class="postcard">
+                <!-- الستامب يظهر فقط هنا داخل البوست كارد -->
                 <img src="stamp.png" class="stamp-img">
                 <div class="letter-back" onclick="hideLetter()">عودة</div>
                 <div class="letter-title">الى لمار</div>
@@ -272,9 +286,15 @@
             startBlow();
         }
 
+        /* تعديل: إيقاف صوت الاحتفال/التصفيق والتصفيق فور الرجوع */
         function hideCake() {
             document.getElementById('mainUI').classList.remove('blur');
             document.getElementById('cakeOverlay').style.display = 'none';
+            
+            const clapAudio = document.getElementById('clap');
+            clapAudio.pause();
+            clapAudio.currentTime = 0;
+
             document.getElementById('bgMusic').play();
             petalsCake.stop();
             petalsMain.start();
